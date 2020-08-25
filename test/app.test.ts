@@ -57,7 +57,7 @@ describe('Feathers application tests', () => {
         assert.strictEqual(stewiesDeposit.data.transactionAmount, 600);
       } catch (error) {
         console.error(error);
-        assert.fail('Should not throw');
+        assert.fail('Should not throw: ' + error.code);
       }
     });
 
@@ -101,7 +101,7 @@ describe('Feathers application tests', () => {
         assert.strictEqual(glennsParty[2].data.transactionAmount, 300);
       } catch (error) {
         console.error(error);
-        assert.fail('Should not throw');
+        assert.fail('Should not throw: ' + error.code);
       }
     });
 
@@ -154,7 +154,7 @@ describe('Feathers application tests', () => {
 
       } catch (error) {
         console.error(error);
-        assert.fail('Should not throw');
+        assert.fail('Should not throw: ' + error.code);
       }
     });
 
