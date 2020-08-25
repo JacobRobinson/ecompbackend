@@ -38,16 +38,21 @@ describe('Feathers application tests', () => {
     // account
     it('Case 1: Stewie Griffin makes a deposit', async () => {
       try {
-        const stewiesDeposit = await axios.post(getUrl('transactions'), {
-          data: JSON.stringify({
-            // token: whatever we use for auth
-            accountFrom: 1234,
-            amount: 300,
-            currency: 'USD'
-          })
+        // initialize
+        await axios.post(getUrl('transactions'), {
+          accountFrom: 2001,
+          amount: 100,
+          currency: 'CAD'
         });
 
-        assert.strictEqual(stewiesDeposit.data.balance, 700);
+        const stewiesDeposit = await axios.post(getUrl('transactions'),{
+          // token: whatever we use for auth
+          accountFrom: 1234,
+          amount: 300,
+          currency: 'USD'
+        });
+
+        assert.strictEqual(stewiesDeposit.data.amount, 700);
         assert.strictEqual(stewiesDeposit.data.accountFrom, 1234);
         assert.strictEqual(stewiesDeposit.data.transactionAmount, 600);
       } catch (error) {
@@ -58,55 +63,100 @@ describe('Feathers application tests', () => {
 
     it('Case 2: Glenn Quagmire throws a party', async () => {
       try {
+        // initialize
+        await axios.post(getUrl('transactions'), {
+          accountFrom: 2001,
+          amount: 35000,
+          currency: 'CAD'
+        });
+
         const glennsParty: AxiosResponse[] = [];
         
         glennsParty.push(await axios.post(getUrl('transactions'), {
-          data: JSON.stringify({
-            // token: whatever we use for auth
-            accountFrom: 2001,
-            amount: -5000,
-            currency: 'MXN'
-          })
+          // token: whatever we use for auth
+          accountFrom: 2001,
+          amount: -5000,
+          currency: 'MXN'
         }));
 
         glennsParty.push(await axios.post(getUrl('transactions'), {
-          data: JSON.stringify({
-            // token: whatever we use for auth
-            accountFrom: 2001,
-            amount: -12500,
-            currency: 'USD'
-          })
+          // token: whatever we use for auth
+          accountFrom: 2001,
+          amount: -12500,
+          currency: 'USD'
         }));
 
         glennsParty.push(await axios.post(getUrl('transactions'), {
-          data: JSON.stringify({
-            // token: whatever we use for auth
-            accountFrom: 2001,
-            amount: 300,
-            currency: 'CAD'
-          })
+          // token: whatever we use for auth
+          accountFrom: 2001,
+          amount: 300,
+          currency: 'CAD'
         }));
 
         const finalBalance = glennsParty[glennsParty.length - 1].data.balance;
 
-        assert.strictEqual(finalBalance, 700);
+        assert.strictEqual(finalBalance, 35000 - 500 - 25000 + 300);
         assert.strictEqual(glennsParty[0].data.transactionAmount, -5000 / 10);
         assert.strictEqual(glennsParty[1].data.transactionAmount, -12500 * 2);
-        assert.strictEqual(glennsParty[2].data.transactionAmount, 3000);
+        assert.strictEqual(glennsParty[2].data.transactionAmount, 300);
       } catch (error) {
         console.error(error);
         assert.fail('Should not throw');
       }
     });
 
-    // it('Case 3: Joe Swanson takes a bribe from Joe Shark', async () => {
-    //   try {
-    //     await axios.post(getUrl('transactions'), {
-    //     });
-    //   } catch (error) {
-    //     assert.fail('Should not throw');
-    //   }
-    // });
+    it('Case 3: Joe Swanson takes a bribe from Joe Shark', async () => {
+      try {
+        // initialize
+        await axios.post(getUrl('transactions'), {
+          accountFrom: 1010,
+          amount: 7425,
+          currency: 'CAD'
+        });
+
+        await axios.post(getUrl('transactions'), {
+          accountFrom: 5500,
+          amount: 15000,
+          currency: 'CAD'
+        });
+
+        const innocuousWithdrawal = await axios.post(getUrl('transactions'), {
+          // token: whatever we use for auth
+          accountFrom: 5500,
+          amount: -5000,
+          currency: 'CAD'
+        });
+
+        const layering = await axios.post(getUrl('transactions'), {
+          // token: whatever we use for auth
+          accountFrom: 1010,
+          amount: 7300,
+          accountTo: 5500,
+          currency: 'CAD'
+        });
+
+        const theBigOne = await axios.post(getUrl('transactions'), {
+          // token: whatever we use for auth
+          accountFrom: 5500,
+          amount: 13726,
+          currency: 'MXN'
+        });
+
+        assert.strictEqual(innocuousWithdrawal.data.accountFrom, 5500);
+        assert.strictEqual(innocuousWithdrawal.data.balance, 15000 - 5000);
+        assert.strictEqual(innocuousWithdrawal.data.amount, -5000);
+        assert.strictEqual(layering.data.accountFrom, 1010);
+        assert.strictEqual(layering.data.balance, 7425 - 7300);
+        assert.strictEqual(layering.data.amount, 7300);
+        assert.strictEqual(layering.data.accountTo, 5500);
+        assert.strictEqual(theBigOne.data.accountFrom, 5500);
+        assert.strictEqual(theBigOne.data.balance, 15000 - 5000 + 7300 + 13726 / 10);
+
+      } catch (error) {
+        console.error(error);
+        assert.fail('Should not throw');
+      }
+    });
 
     // it('Case 4: Lois gives Peter his allowance', async () => {
     //   try {
