@@ -2,6 +2,10 @@
 
 > Option A
 
+I did the money wrong. It's a float when it should be a very long integer (a bit like Bitcoin does). I'm not changing it.
+
+I also did account numbers wrong. Should be strings. Rookie mistake. This is why I love TDD - it protects you from yourself.
+
 ## About
 
 This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
