@@ -190,7 +190,7 @@ describe('Feathers application tests', () => {
         const loisDeposit = await axios.post(getUrl('transactions'), {
           customerID: '456',
           accountFrom: '0456',
-          amount: 65000,
+          amount: 23789,
           currency: 'CAD'
         });
 
@@ -202,9 +202,15 @@ describe('Feathers application tests', () => {
           currency: 'CAD'
         });
 
-        assert.strictEqual(innocuousWithdrawal.data.accountFrom, 5500);
-        assert.strictEqual(innocuousWithdrawal.data.balance, 15000 - 5000);
-        assert.strictEqual(innocuousWithdrawal.data.amount, -5000);
+        const peterChecksHisAllowance = await axios.get(getUrl('accounts'), {
+          params: {
+            customerID: '123',
+            account: '0123'
+          }
+        });
+
+        assert.strictEqual(peterChecksHisAllowance.data.balance, 150 - 70*2 + 23.75);
+        assert.strictEqual(petersAllowance.data.balance, 65000 + 23789 - 23.75);
       } catch (error) {
         assert.fail('Should not throw');
       }
