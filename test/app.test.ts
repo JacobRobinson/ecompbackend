@@ -57,7 +57,6 @@ describe('Feathers application tests', () => {
         assert.strictEqual(stewiesDeposit.data.accountFrom, 1234);
         assert.strictEqual(stewiesDeposit.data.transactionAmount, 600);
       } catch (error) {
-        console.error(error);
         assert.fail('Should not throw: ' + error.code);
       }
     });
@@ -102,7 +101,6 @@ describe('Feathers application tests', () => {
         assert.strictEqual(glennsParty[1].data.transactionAmount, -12500 * 2);
         assert.strictEqual(glennsParty[2].data.transactionAmount, 300);
       } catch (error) {
-        console.error(error);
         assert.fail('Should not throw: ' + error.code);
       }
     });
@@ -157,7 +155,6 @@ describe('Feathers application tests', () => {
         assert.strictEqual(theBigOne.data.balance, 15000 - 5000 + 7300 + 13726 / 10);
 
       } catch (error) {
-        console.error(error);
         assert.fail('Should not throw: ' + error.code);
       }
     });
@@ -216,14 +213,32 @@ describe('Feathers application tests', () => {
       }
     });
 
-    // it('Case 5: Joe Shark tries to get his money back from Joe Swanson', async () => {
-    //   try {
-    //     await axios.post(getUrl('transactions'), {
-    //     });
-    //   } catch (error) {
-    //     assert.fail('Should not throw');
-    //   }
-    // });
+    it('Case 5: Joe Shark tries to get his money back from Joe Swanson', async () => {
+      let johnsAttempt;
+      try {
+        // initialize
+        await axios.post(getUrl('transactions'), {
+          customerID: '002',
+          accountFrom: '1010',
+          amount: 7425,
+          currency: 'CAD'
+        });
+
+        johnsAttempt = await axios.post(getUrl('transactions'), {
+          customerID: '219',
+          accountFrom: '1010',
+          amount: -100,
+          currency: 'CAD'
+        });
+
+        assert.fail('John\'s attempt should have failed');
+      } catch (error) {
+        console.error(error);
+        assert.equal(johnsAttempt.data, 'this needs to be updated');
+        // TODO: figure out what error to throw, or if it should throw one at all
+        assert.fail('not sure how to pass this test yet. figure it out');
+      }
+    });
 
     // it('Case 6: Peter and Lois sell Meg to Joe Shark', async () => {
     //   try {

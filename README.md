@@ -6,6 +6,8 @@ I did the money wrong. It's a float when it should be a very long integer (a bit
 
 I also did account numbers wrong. Should be strings. Rookie mistake. This is why I love TDD - it protects you from yourself.
 
+A better way to do the tests would be to store test data in a 'test data repo' somewhere that is disconnected from the code repo itself. The there would be a 'beforeEach' function in Mocha that can load a very large ES6 Map with the test name or function hash as the key and the data as the value.
+
 ## About
 
 This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
