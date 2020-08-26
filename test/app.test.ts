@@ -53,9 +53,9 @@ describe('Feathers application tests', () => {
           currency: 'USD'
         });
 
-        assert.strictEqual(stewiesDeposit.data.amount, 700);
+        assert.strictEqual(stewiesDeposit.data.balance, 700);
         assert.strictEqual(stewiesDeposit.data.accountFrom, 1234);
-        assert.strictEqual(stewiesDeposit.data.transactionAmount, 600);
+        assert.strictEqual(stewiesDeposit.data.amount, 600);
       } catch (error) {
         assert.fail('Should not throw: ' + error.code);
       }
@@ -97,9 +97,10 @@ describe('Feathers application tests', () => {
         const finalBalance = glennsParty[glennsParty.length - 1].data.balance;
 
         assert.strictEqual(finalBalance, 35000 - 500 - 25000 + 300);
-        assert.strictEqual(glennsParty[0].data.transactionAmount, -5000 / 10);
-        assert.strictEqual(glennsParty[1].data.transactionAmount, -12500 * 2);
-        assert.strictEqual(glennsParty[2].data.transactionAmount, 300);
+        assert.strictEqual(finalBalance, 9800);
+        assert.strictEqual(glennsParty[0].data.amount, -5000 / 10);
+        assert.strictEqual(glennsParty[1].data.amount, -12500 * 2);
+        assert.strictEqual(glennsParty[2].data.amount, 300);
       } catch (error) {
         assert.fail('Should not throw: ' + error.code);
       }
@@ -139,7 +140,7 @@ describe('Feathers application tests', () => {
 
         const theBigOne = await axios.post(getUrl('transactions'), {
           customerID: '002',
-          accountFrom: '5500',
+          accountFrom: '1010',
           amount: 13726,
           currency: 'MXN'
         });
@@ -153,6 +154,7 @@ describe('Feathers application tests', () => {
         assert.strictEqual(layering.data.accountTo, 5500);
         assert.strictEqual(theBigOne.data.accountFrom, 5500);
         assert.strictEqual(theBigOne.data.balance, 15000 - 5000 + 7300 + 13726 / 10);
+        assert.strictEqual(theBigOne.data.balance, 1497.60);
 
       } catch (error) {
         assert.fail('Should not throw: ' + error.code);
