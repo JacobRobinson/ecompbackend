@@ -57,6 +57,9 @@ describe('Feathers application tests', () => {
         assert.strictEqual(stewiesDeposit.data.accountFrom, 1234);
         assert.strictEqual(stewiesDeposit.data.amount, 600);
       } catch (error) {
+        console.error(error.config);
+        console.error('=================');
+        console.error(error.response.data);
         assert.fail('Should not throw: ' + error.code);
       }
     });
@@ -235,7 +238,7 @@ describe('Feathers application tests', () => {
 
         assert.fail('John\'s attempt should have failed');
       } catch (error) {
-        console.error(error);
+        // console.error(error);
         assert.equal(johnsAttempt.data, 'this needs to be updated');
         // TODO: figure out what error to throw, or if it should throw one at all
         assert.fail('not sure how to pass this test yet. figure it out');

@@ -12,7 +12,12 @@ export default function (app: Application): Knex {
     if(!exists) {
       db.schema.createTable(tableName, table => {
         table.increments('id');
-        table.string('text');
+        table.float('amount');
+        table.string('currency');
+        table.string('accountFrom').nullable();
+        table.string('accountTo').nullable();
+        table.foreign('accountFrom').references('Accounts.accountNumber');
+        table.foreign('accountTo').references('Accounts.accountNumber');
       })
         .then(() => console.log(`Created ${tableName} table`))
         .catch(e => console.error(`Error creating ${tableName} table`, e));
