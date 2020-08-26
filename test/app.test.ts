@@ -240,7 +240,7 @@ describe('Feathers application tests', () => {
       }
     });
 
-    it('Case 6: Peter and Lois pay John Shark to take Megm from their joint account', async () => {
+    it('Case 6: Peter and Lois pay John Shark to take Meg from their joint account', async () => {
       try {
         // initialize 
         await axios.post(getUrl('transactions'), {
@@ -261,7 +261,7 @@ describe('Feathers application tests', () => {
         assert.strictEqual(pleaseJustTakeHer.data.balance, 20000 - 5000);
         assert.strictEqual(pleaseJustTakeHer.data.amount, 5000);
         assert.strictEqual(pleaseJustTakeHer.data.accountTo, '0212');
-        assert.strictEqual(pleaseJustTakeHer.data.accountTo, '0789');
+        assert.strictEqual(pleaseJustTakeHer.data.accountFrom, '0789');
       } catch (error) {
         assert.fail('Should not throw');
       }
