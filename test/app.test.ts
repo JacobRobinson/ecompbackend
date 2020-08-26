@@ -105,7 +105,7 @@ describe('Feathers application tests', () => {
       }
     });
 
-    it('Case 3: Joe Swanson takes a bribe from Joe Shark', async () => {
+    it('Case 3: Joe Swanson takes a bribe from John Shark', async () => {
       try {
         // initialize
         await axios.post(getUrl('transactions'), {
@@ -213,7 +213,7 @@ describe('Feathers application tests', () => {
       }
     });
 
-    it('Case 5: Joe Shark tries to get his money back from Joe Swanson', async () => {
+    it('Case 5: John Shark tries to get his money back from Joe Swanson', async () => {
       let johnsAttempt;
       try {
         // initialize
@@ -240,14 +240,32 @@ describe('Feathers application tests', () => {
       }
     });
 
-    // it('Case 6: Peter and Lois sell Meg to Joe Shark', async () => {
-    //   try {
-    //     await axios.post(getUrl('transactions'), {
-    //     });
-    //   } catch (error) {
-    //     assert.fail('Should not throw');
-    //   }
-    // });
+    it('Case 6: Peter and Lois pay John Shark to take Megm from their joint account', async () => {
+      try {
+        // initialize 
+        await axios.post(getUrl('transactions'), {
+          customerID: '456',
+          accountFrom: '0789',
+          amount: 20000,
+          currency: 'CAD'
+        });
+
+        const pleaseJustTakeHer = await axios.post(getUrl('transactions'), {
+          customerID: '456',
+          accountFrom: '0789',
+          amount: 5000,
+          accountTo: '0212',
+          currency: 'CAD'
+        });
+        
+        assert.strictEqual(pleaseJustTakeHer.data.balance, 20000 - 5000);
+        assert.strictEqual(pleaseJustTakeHer.data.amount, 5000);
+        assert.strictEqual(pleaseJustTakeHer.data.accountTo, '0212');
+        assert.strictEqual(pleaseJustTakeHer.data.accountTo, '0789');
+      } catch (error) {
+        assert.fail('Should not throw');
+      }
+    });
 
     it('shows a 404 HTML page', async () => {
       try {
