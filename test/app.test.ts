@@ -16,9 +16,71 @@ const getUrl = (pathname?: string): string => url.format({
 describe('Feathers application tests', () => {
   let server: Server;
 
-  before(function(done) {
+  function getAccountNumberFromName(name: string): string {
+    switch (name) {
+    case 'Stewie Griffin':
+      return '1234';
+    case 'Glenn Quagmire': 
+      return '2001';
+    case 'Joe Swanson':
+      return '1010';
+    case 'Peter Griffin':
+      return '0123';
+    case 'Lois Griffin':
+      return '0456';
+    case 'John Shark':
+      return '0212';
+    }
+  }
+
+  before(async () => {
     server = app.listen(port);
-    server.once('listening', () => done());
+
+    const createUsers = await Promise.all([
+      axios.post(getUrl('users'), {
+        customerID: '777',
+        name: 'Stewie Griffin'
+      }),
+      axios.post(getUrl('users'), {
+        customerID: '504',
+        name: 'Glenn Quagmire'
+      }),
+      axios.post(getUrl('users'), {
+        customerID: '002',
+        name: 'Joe Swanson'
+      }),
+      axios.post(getUrl('users'), {
+        customerID: '123',
+        name: 'Peter Griffin'
+      }),
+      axios.post(getUrl('users'), {
+        customerID: '456',
+        name: 'Lois Griffin'
+      }),
+      axios.post(getUrl('users'), {
+        customerID: '219',
+        name: 'John Shark'
+      }),
+    ]);
+
+    await Promise.all(createUsers.map(async (user: AxiosResponse): Promise<AxiosResponse<any>> => {
+      return axios.post(getUrl('accounts'), {
+        primary: user.data.name,
+        accountNumber: getAccountNumberFromName(user.data.name),
+      });
+    }));
+
+    return Promise.all([
+      axios.post(getUrl('accounts'), {
+        primary: 'Joe Swanson',
+        accountNumber: '5500',
+      }),
+      axios.post(getUrl('accounts'), {
+        primary: 'Peter Griffin',
+        secondary: 'Lois Griffin',
+        accountNumber: '5050',
+      }),
+    ]);
   });
 
   after(function(done) {
@@ -39,9 +101,9 @@ describe('Feathers application tests', () => {
     it('Case 1: Stewie Griffin makes a deposit', async () => {
       try {
         // initialize
-        await axios.post(getUrl('transactions'), {
+        const init = await axios.post(getUrl('transactions'), {
           customerID: '777',
-          accountFrom: '2001',
+          accountFrom: '1234',
           amount: 100,
           currency: 'CAD'
         });
@@ -54,12 +116,11 @@ describe('Feathers application tests', () => {
         });
 
         assert.strictEqual(stewiesDeposit.data.balance, 700);
-        assert.strictEqual(stewiesDeposit.data.accountFrom, 1234);
+        assert.strictEqual(stewiesDeposit.data.accountFrom, '1234');
         assert.strictEqual(stewiesDeposit.data.amount, 600);
       } catch (error) {
-        console.error(error.config);
-        console.error('=================');
-        console.error(error.response.data);
+        console.error(error);
+
         assert.fail('Should not throw: ' + error.code);
       }
     });
@@ -148,15 +209,14 @@ describe('Feathers application tests', () => {
           currency: 'MXN'
         });
 
-        assert.strictEqual(innocuousWithdrawal.data.accountFrom, 5500);
+        assert.strictEqual(innocuousWithdrawal.data.accountFrom, '5500');
         assert.strictEqual(innocuousWithdrawal.data.balance, 15000 - 5000);
         assert.strictEqual(innocuousWithdrawal.data.amount, -5000);
-        assert.strictEqual(layering.data.accountFrom, 1010);
+        assert.strictEqual(layering.data.accountFrom, '1010');
         assert.strictEqual(layering.data.balance, 7425 - 7300);
         assert.strictEqual(layering.data.amount, 7300);
-        assert.strictEqual(layering.data.accountTo, 5500);
-        assert.strictEqual(theBigOne.data.accountFrom, 5500);
-        assert.strictEqual(theBigOne.data.balance, 15000 - 5000 + 7300 + 13726 / 10);
+        assert.strictEqual(layering.data.accountTo, '5500');
+        assert.strictEqual(theBigOne.data.accountFrom, '1010');
         assert.strictEqual(theBigOne.data.balance, 1497.60);
 
       } catch (error) {

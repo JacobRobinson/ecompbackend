@@ -24,10 +24,10 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "npm run compile && npm run mocha",
+    "test": "touch ecompbackend.sqlite && rm ecompbackend.sqlite && npm run compile && npm run mocha",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "ts-node-dev --no-notify src/",
-    "start": "npm run compile && node lib/",
+    "start": "rm ecompbackend.sqlite && npm run compile && node lib/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",
     "compile": "shx rm -rf lib/ && tsc"
   },
