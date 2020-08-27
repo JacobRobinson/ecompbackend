@@ -13,8 +13,7 @@ export default function (app: Application): Knex {
       db.schema.createTable(tableName, table => {
         table.increments('id');
         table.float('amount');
-        table.string('currency');
-        table.string('accountFrom').nullable();
+        table.string('accountFrom').notNullable();
         table.string('accountTo').nullable();
         table.foreign('accountFrom').references('Accounts.accountNumber');
         table.foreign('accountTo').references('Accounts.accountNumber');

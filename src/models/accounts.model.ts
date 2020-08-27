@@ -12,7 +12,7 @@ export default function (app: Application): Knex {
     if(!exists) {
       db.schema.createTable(tableName, table => {
         table.increments('id');
-        table.float('balance');
+        table.float('balance').defaultTo(0);
         table.string('accountNumber').notNullable().index();
         table.string('primary').notNullable().index();
         table.string('secondary').nullable();
