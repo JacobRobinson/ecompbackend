@@ -6,6 +6,8 @@
 2) `npm install`
 3) `npm test`
 
+Did it in TypeScript just to be fancy. The testing is done in Mocha with assert. I used this framework to make everything easier - it includes a code generator for RESTful services, models, database connections, and application hooks.
+
 I did the money wrong. It's a float when it should be a very long integer (a bit like Bitcoin does). I'm not changing it.
 
 I also did account numbers wrong. Should be strings. Rookie mistake. This is why I love TDD - it protects you from yourself. I did change this one.
