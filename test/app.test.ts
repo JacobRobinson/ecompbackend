@@ -79,7 +79,7 @@ describe('Feathers application tests', () => {
       axios.post(getUrl('accounts'), {
         primary: '123',
         secondary: '456',
-        accountNumber: '5050',
+        accountNumber: '0789',
       }),
     ]);
   });
