@@ -2,6 +2,7 @@
 import checkCustomerId from '../../hooks/check-customer-id';
 import convertCurrency from '../../hooks/convert-currency';
 import updateBalances from '../../hooks/update-balances';
+import removeId from '../../hooks/remove-id';
 export default {
   before: {
     all: [checkCustomerId()],
@@ -14,7 +15,7 @@ export default {
   },
 
   after: {
-    all: [],
+    all: [removeId()],
     find: [],
     get: [],
     create: [updateBalances()],

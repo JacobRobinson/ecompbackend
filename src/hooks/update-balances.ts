@@ -24,8 +24,7 @@ export default (options = {}): Hook => {
       const updatedBalance = await updateAccountBalance(accountFrom, amount, as);
       context.result.balance = updatedBalance;
     }
-
-    delete context.result.id;
+    
     return context;
   };
 };
