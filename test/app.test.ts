@@ -4,6 +4,7 @@ import url from 'url';
 import axios, { AxiosResponse } from 'axios';
 
 import app from '../src/app';
+import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 
 const port = app.get('port') || 8998;
 const getUrl = (pathname?: string): string => url.format({
@@ -65,19 +66,19 @@ describe('Feathers application tests', () => {
 
     await Promise.all(createUsers.map(async (user: AxiosResponse): Promise<AxiosResponse<any>> => {
       return axios.post(getUrl('accounts'), {
-        primary: user.data.name,
+        primary: user.data.customerID,
         accountNumber: getAccountNumberFromName(user.data.name),
       });
     }));
 
     return Promise.all([
       axios.post(getUrl('accounts'), {
-        primary: 'Joe Swanson',
+        primary: '002',
         accountNumber: '5500',
       }),
       axios.post(getUrl('accounts'), {
-        primary: 'Peter Griffin',
-        secondary: 'Lois Griffin',
+        primary: '123',
+        secondary: '456',
         accountNumber: '5050',
       }),
     ]);
@@ -119,8 +120,6 @@ describe('Feathers application tests', () => {
         assert.strictEqual(stewiesDeposit.data.accountFrom, '1234');
         assert.strictEqual(stewiesDeposit.data.amount, 600);
       } catch (error) {
-        console.error(error);
-
         assert.fail('Should not throw: ' + error.code);
       }
     });
@@ -253,7 +252,7 @@ describe('Feathers application tests', () => {
           customerID: '456',
           accountFrom: '0456',
           amount: 23789,
-          currency: 'CAD'
+          currency: 'USD'
         });
 
         const petersAllowance = await axios.post(getUrl('transactions'), {
@@ -266,13 +265,13 @@ describe('Feathers application tests', () => {
 
         const peterChecksHisAllowance = await axios.get(getUrl('accounts'), {
           params: {
-            customerID: '123',
-            account: '0123'
+            accountNumber: '0123'
           }
         });
 
-        assert.strictEqual(peterChecksHisAllowance.data.balance, 150 - 70*2 + 23.75);
-        assert.strictEqual(petersAllowance.data.balance, 65000 + 23789 - 23.75);
+        assert.strictEqual(petersAllowance.data.balance, 112554.25);
+        assert.strictEqual(petersAllowance.data.balance, 65000 + 23789 * 2 - 23.75);
+        assert.strictEqual(peterChecksHisAllowance.data.data[0].balance, 150 - 70*2 + 23.75);
       } catch (error) {
         assert.fail('Should not throw');
       }
@@ -298,10 +297,7 @@ describe('Feathers application tests', () => {
 
         assert.fail('John\'s attempt should have failed');
       } catch (error) {
-        // console.error(error);
-        assert.equal(johnsAttempt.data, 'this needs to be updated');
-        // TODO: figure out what error to throw, or if it should throw one at all
-        assert.fail('not sure how to pass this test yet. figure it out');
+        assert.equal(error.response.data.message, 'Transaction denied: wrong customer');
       }
     });
 
