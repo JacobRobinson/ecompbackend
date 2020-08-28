@@ -5,6 +5,8 @@
 1) Clone
 2) `npm install`
 3) `npm test`
+4) `npm start` for frontend support
+5) `git log` is also an interesting adventure
 
 Did it in TypeScript just to be fancy. The testing is done in Mocha with assert. I used this framework to make everything easier - it includes a code generator for RESTful services, models, database connections, and application hooks.
 
