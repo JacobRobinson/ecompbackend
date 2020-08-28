@@ -6,11 +6,13 @@
 2) `npm install`
 3) `npm test`
 
+Did it in TypeScript just to be fancy. The testing is done in Mocha with assert. I used this framework to make everything easier - it includes a code generator for RESTful services, models, database connections, and application hooks.
+
 I did the money wrong. It's a float when it should be a very long integer (a bit like Bitcoin does). I'm not changing it.
 
 I also did account numbers wrong. Should be strings. Rookie mistake. This is why I love TDD - it protects you from yourself. I did change this one.
 
-A better way to do the tests would be to store test data in a 'test data repo' somewhere that is disconnected from the code repo itself. The there would be a 'beforeEach' function in Mocha that can load a very large ES6 Map with the test name or function hash as the key and the data as the value. Even better, use one of those handy-dandy in-memory DB's you can find on NPM that were meant to go with Mocha. I should also have used schema validation.
+A better way to do the tests would be to store test data in a 'test data repo' somewhere that is disconnected from the code repo itself. The there would be a 'beforeEach' function in Mocha that can load a very large ES6 Map with the test name or function hash as the key and the data as the value. Even better, use one of those handy-dandy in-memory DB's you can find on NPM that were meant to go with Mocha. I should also have used JSON schema validation.
 
 The data model could also better.
 
