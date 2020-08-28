@@ -5,10 +5,13 @@ import updateBalances from '../../hooks/update-balances';
 import removeId from '../../hooks/remove-id';
 export default {
   before: {
-    all: [checkCustomerId()],
+    all: [],
     find: [],
     get: [],
-    create: [convertCurrency()],
+    create: [
+      convertCurrency(),
+      checkCustomerId()
+    ],
     update: [],
     patch: [],
     remove: []
